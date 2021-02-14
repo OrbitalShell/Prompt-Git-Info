@@ -9,21 +9,21 @@
 	<NeutralLanguage>en-US</NeutralLanguage>
 	<ApplicationIcon>assets\robotazteque.ico</ApplicationIcon>
 
-	<PackageId>Prompt-Git-Info</PackageId>
+	<PackageId>OrbitalShell-Module-PromptGitInfo</PackageId>
     <IsPackable>true</IsPackable>
     <Authors>Franck Gaspoz</Authors>
     <Company>Orbital Shell</Company>
     <Product>Prompt Git Info (Orbital Shell Module)</Product>
     <Description>Add information about any current or parent GIT repository to orbital shell command line prompt. for example: OrbitalShell ├ master +0 ~0 -0 | ~2 -0 ?2</Description>    
-	<Copyright>(c) 2020 Licence MIT</Copyright>
-    <Version>1.0.4</Version>
-    <InformationalVersion>1.0.4</InformationalVersion>
+	  <Copyright>(c) 2020 Licence MIT</Copyright>
+    <Version>1.0.3</Version>
+    <InformationalVersion>1.0.3</InformationalVersion>
     
 	<PackageReleaseNotes>initial stable release, moved to individual repository</PackageReleaseNotes>
     <ApplicationIcon>assets\robotazteque.ico</ApplicationIcon>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://franck-gaspoz.github.io/orbital-shell/</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/franck-gaspoz/orbital-shell.git</RepositoryUrl>
+    <PackageProjectUrl>https://orbitalshell.github.io/Orbital-Shell/</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/OrbitalShell/Prompt-Git-Info.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>prompt git git-branch git-status bash linux shell interactive csharp netcore5 netstandard21 netcore31 cli command-line-tool command-line-parser command-line-interface</PackageTags>    
     <PackageIcon>robotazteque.png</PackageIcon>
@@ -44,10 +44,6 @@
 	      <PackagePath></PackagePath>
 	    </None>
     </ItemGroup>
-	
-  <ItemGroup>
-    <None Remove="module.nuspec" />
-  </ItemGroup>
 	
   <ItemGroup>
     <None Include="assets\0.png">
@@ -83,14 +79,6 @@
     <None Include="assets\robotazteque.png" />
   </ItemGroup>
 	
-  <ItemGroup>
-	  <PackageReference Include="OrbitalShell-ConsoleApp" Version="1.0.1-beta4">
-		  <ExcludeAssets>contentfiles</ExcludeAssets>
-	  </PackageReference>
-	  <PackageReference Include="OrbitalShell-Kernel" Version="1.0.1-beta4">
-		  <ExcludeAssets>contentfiles</ExcludeAssets>
-	  </PackageReference>
-  </ItemGroup>
 
   <ItemGroup>
     <None Update="LICENSE.md">
@@ -99,6 +87,11 @@
     <None Update="README.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+	
+
+  <ItemGroup>
+    <PackageReference Include="orbitalshell-kernel" Version="1.0.1-beta4" />
   </ItemGroup>
 
 </Project>
