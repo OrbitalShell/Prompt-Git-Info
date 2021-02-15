@@ -12,10 +12,10 @@ namespace OrbitalShell.Module.PromptGitInfo
         public Dictionary<char, int> X = new Dictionary<char, int>();
         public Dictionary<char, int> Y = new Dictionary<char, int>();
         public string ErrorMessage;
-        public static List<char> Names = new List<char> { 'M', 'A', 'D', 'R', 'C', 'U', ' ', '?', '!' , '#' };
+        public static List<char> Names = new List<char> { 'M', 'A', 'D', 'R', 'C', 'U', ' ', '?', '!', '#' , '↑', '↓' };
 
-        public int IndexChanges, WorktreeChanges, LocalAdded, LocalDeleted, WorktreeAdded, WorktreeDeleted, Untracked, Behind;
-        public bool IsModified => (IndexChanges + WorktreeChanges + LocalAdded + LocalDeleted + WorktreeAdded + WorktreeDeleted + Untracked + Behind) > 0;
+        public int IndexChanges, WorktreeChanges, IndexAdded, IndexDeleted, WorktreeAdded, WorktreeDeleted, Untracked, Behind, Ahead;
+        public bool IsModified => (IndexChanges + WorktreeChanges + IndexAdded + IndexDeleted + WorktreeAdded + WorktreeDeleted + Untracked + Behind + Ahead) > 0;
 
         public RepoInfo()
         {
@@ -24,18 +24,21 @@ namespace OrbitalShell.Module.PromptGitInfo
 
         public void Update()
         {
-            IndexChanges = X.Values.Aggregate(0, (a, b) => a + b) - X['?'] - X['A'] - X['D'] - X['#'];
+            IndexChanges = X.Values.Aggregate(0, (a, b) => a + b) - X['?'] - X['A'] - X['D'] - X['↑'] - X['↓'];
             WorktreeChanges = Y.Values.Aggregate(0, (a, b) => a + b) - Y['?'] - Y['A'] - Y['D'];
-            LocalAdded = X['A'];
-            LocalDeleted = X['D'];
+            IndexAdded = X['A'];
+            IndexDeleted = X['D'];
             WorktreeAdded = Y['A'];
             WorktreeDeleted = Y['D'];
             Untracked = X['?'];
-            Behind = X['#'];
+            Behind = X['↑'];
+            Ahead = X['↓'];
             RepoStatus = RepoStatus.UpToDate;
             if ((IndexChanges > 0 || WorktreeChanges > 0) && Untracked==0) RepoStatus = RepoStatus.Modified;
             if ((IndexChanges > 0 || WorktreeChanges > 0) && Untracked>0) RepoStatus = RepoStatus.ModifiedUntracked;           
             if (Behind > 0) RepoStatus = RepoStatus.Behind;
+            if (Ahead > 0) RepoStatus = RepoStatus.Ahead;
+            if (Ahead > 0 && Behind > 0) RepoStatus = RepoStatus.AheadBehind;
         }
 
         public void Inc(char lName, char rName,string line)
@@ -66,10 +69,10 @@ namespace OrbitalShell.Module.PromptGitInfo
             {
                 // branch
                 Match m = null;
-                if ((m = line.Match(@"ahead (\d+)\]$")) != null && m.Success)
-                    X['#'] = -Convert.ToInt32(m.Groups[1].Value);
+                if ((m = line.Match(@"\[ahead (\d+)")) != null && m.Success)
+                    X['↓'] = Convert.ToInt32(m.Groups[1].Value);
                 if ((m = line.Match(@"behind (\d+)\]$")) != null && m.Success)
-                    X['#'] = Convert.ToInt32(m.Groups[1].Value);
+                    X['↑'] = Convert.ToInt32(m.Groups[1].Value);
             }
         }
 

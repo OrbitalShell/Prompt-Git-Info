@@ -22,6 +22,7 @@ namespace OrbitalShell.Module.PromptGitInfo
     {
         #region attributes 
 
+        public const string GitGetStatusCmd = "status -s -b -u -M --porcelain";
         public const string ToolNamespace = "git";
         public const string ToolVarSettingsName = "promptInfo";
         public const string VarIsEnabled = "isEnabled";
@@ -34,6 +35,7 @@ namespace OrbitalShell.Module.PromptGitInfo
         public const string VarUnknownBackgroundColor = "unknownBackgroundColor";
         public const string VarModifiedTextTemplate = "modifiedTextTemplate";
         public const string VarBehindTextTemplate = "behindTextTemplate";
+        public const string VarAheadBehindTextTemplate = "aheadBbehindTextTemplate";
         public const string VarAheadTextTemplate = "aheadTextTemplate";
         public const string VarTextTemplateNoData = "noDataTextTemplate";
         public const string VarTextTemplateNoRepository = "templateNoRepository";
@@ -70,6 +72,11 @@ namespace OrbitalShell.Module.PromptGitInfo
                 VarBehindTextTemplate,
                 $"%bgColor%(f=white) %repoName% {branchSymbol} %branch% %sepSymbol%%errorMessage%{infoColor}+%indexAdded% ~%indexChanges% -%indexDeleted% | ~%worktreeChanges% -%worktreeDeleted% ?%untracked% {behindColor}{Unicode.ArrowDown}%behind%(rdc) ", false);
             
+            context.ShellEnv.AddNew(
+                _namespace,
+                VarAheadBehindTextTemplate,
+                $"%bgColor%(f=white) %repoName% {branchSymbol} %branch% %sepSymbol%%errorMessage%{infoColor}+%indexAdded% ~%indexChanges% -%indexDeleted% | ~%worktreeChanges% -%worktreeDeleted% ?%untracked% {aheadColor}{Unicode.ArrowUp}%ahead%{behindColor}{Unicode.ArrowDown}%behind%(rdc) ", false);
+
             context.ShellEnv.AddNew(
                 _namespace,
                 VarAheadTextTemplate,
@@ -126,20 +133,23 @@ namespace OrbitalShell.Module.PromptGitInfo
                 var repo = _GetRepoStatus(context, repoPath);
                 var repoName = Path.GetFileName(Path.GetDirectoryName(repoPath));
 
+                var tpl = VarTextTemplateNoRepository;
+                if (repo.Ahead > 0 && repo.Behind > 0) tpl = VarAheadBehindTextTemplate;
+                else if (repo.Behind < 0) tpl = VarAheadTextTemplate;
+                else if (repo.Behind > 0) tpl = VarBehindTextTemplate;
+                else if (repo.IsModified) tpl = VarModifiedTextTemplate;
+                else tpl = VarTextTemplateNoData;
+
                 string text =
                      context.ShellEnv.GetValue<string>(
                          _namespace,
-                         repoPath != null ?
-                            (repo.Behind<0? VarAheadTextTemplate : (
-                            ((repo.Behind>0)? VarBehindTextTemplate :
-                            ((repo.IsModified) ? VarModifiedTextTemplate : VarTextTemplateNoData))
-                            ))
-                            : VarTextTemplateNoRepository
+                         tpl
                      );
 
                 var bgColor = "";
                 switch (repo.RepoStatus)
                 {
+                    case RepoStatus.AheadBehind:
                     case RepoStatus.Behind:
                         bgColor = context.ShellEnv.GetValue<string>(_namespace, VarBehindBackgroundColor);
                         break;
@@ -159,8 +169,7 @@ namespace OrbitalShell.Module.PromptGitInfo
                         bgColor = context.ShellEnv.GetValue<string>(_namespace, VarUnknownBackgroundColor);
                         break;
                 }
-                if (repo.Behind < 0)
-                    bgColor = context.ShellEnv.GetValue<string>(_namespace, VarAheadBackgroundColor);
+                //bgColor = context.ShellEnv.GetValue<string>(_namespace, VarAheadBackgroundColor);
 
                 var branch = _GetBranch(repoPath);
 
@@ -169,16 +178,16 @@ namespace OrbitalShell.Module.PromptGitInfo
                     { "bgColor" , bgColor },
                     { "branch" , branch },
                     { "errorMessage" , repo.ErrorMessage },
-                    { "indexAdded" , repo.LocalAdded+"" },
+                    { "indexAdded" , repo.IndexAdded+"" },
                     { "indexChanges" , repo.IndexChanges+"" },
-                    { "indexDeleted" , repo.LocalDeleted+"" },
+                    { "indexDeleted" , repo.IndexDeleted+"" },
                     { "worktreeChanges" , repo.WorktreeChanges+"" },
                     { "worktreeAdded" , repo.WorktreeAdded+"" },
                     { "worktreeDeleted" , repo.WorktreeDeleted+"" },
                     { "untracked" , repo.Untracked+"" },
                     { "repoName" , repoName },
                     { "behind" , repo.Behind+"" },
-                    { "ahead" , (-repo.Behind)+"" },
+                    { "ahead" , repo.Ahead+"" },
                     { "sepSymbol" , "" }
                 };
                 text = _SetVars(context, text, vars);
@@ -216,24 +225,13 @@ namespace OrbitalShell.Module.PromptGitInfo
 
             try
             {
-                context.CommandLineProcessor.ShellExec(context, "git", "status -s -b -u -M --porcelain", out var output, true, false);
-                //string output = null;
+                context.CommandLineProcessor.ShellExec(context, "git", GitGetStatusCmd, out var output, true, false);
+                
                 if (output != null)
                 {
                     var lines = output.Split(Environment.NewLine);
                     foreach (var line in lines)
                     {
-                        /*
-                            C       copied
-                            R       renamed
-                            D       deleted
-                            A       added       
-                            M,' '   updated
-                            U       updated but not merged
-                            ?       untracked
-                            #       behind
-                            !       ignored
-                        */
                         if (!string.IsNullOrWhiteSpace(line) && line.Length > 2)
                         {
                             var x = line[0];
