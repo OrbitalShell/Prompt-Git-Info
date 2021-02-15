@@ -15,7 +15,7 @@
     <Company>Orbital Shell</Company>
     <Product>Prompt Git Info (Orbital Shell Module)</Product>
     <Description>Add information about any current or parent GIT repository to orbital shell command line prompt. for example: OrbitalShell ├ master +0 ~0 -0 | ~2 -0 ?2</Description>    
-	  <Copyright>(c) 2020 Licence MIT</Copyright>
+	  <Copyright>(c) Orbital Shell 2020</Copyright>
     <Version>1.0.6</Version>
     <InformationalVersion>1.0.6</InformationalVersion>
     
@@ -26,7 +26,7 @@
     <RepositoryUrl>https://github.com/OrbitalShell/Prompt-Git-Info.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>prompt git git-branch git-status bash linux shell interactive csharp netcore5 netstandard21 netcore31 cli command-line-tool command-line-parser command-line-interface</PackageTags>    
-    <PackageIcon>robotazteque.png</PackageIcon>
+    <PackageIcon>content\assets\robotazteque.png</PackageIcon>
       
 	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   
@@ -35,63 +35,76 @@
   </PropertyGroup>
 
     <ItemGroup>
-	    <Compile Remove="assets\**" />
-	    <EmbeddedResource Remove="assets\**" />
-	    <None Remove="assets\**" />
-	    <None Include="assets\robotazteque.ico" />
-	    <None Include="assets\robotazteque.png">
-	      <Pack>True</Pack>
-	      <PackagePath></PackagePath>
-	    </None>
-    </ItemGroup>
+		<None Remove="assets\robotazteque.ico" />
+		<None Include="assets\robotazteque.ico">
+			<Pack>True</Pack>
+			<PackagePath>contentFiles/any/netcoreapp3.1/assets/;content/assets/</PackagePath>
+		</None>
+		<None Remove="assets\robotazteque.png" />
+		<None Include="assets\robotazteque.png">
+			<Pack>True</Pack>
+			<PackagePath>contentFiles/any/netcoreapp3.1/assets/;content/assets/</PackagePath>
+		</None>
+
+        <None Include="assets\0.png">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		    <Pack>True</Pack>
+		    <PackagePath>contentFiles/any/netcoreapp3.1/assets/;content/assets/</PackagePath>
+        </None>
+        <None Include="assets\1.png">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		    <Pack>True</Pack>
+		    <PackagePath>contentFiles/any/netcoreapp3.1/assets/;content/assets/</PackagePath>
+        </None>
+        <None Include="assets\2.png">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		    <Pack>True</Pack>
+		    <PackagePath>contentFiles/any/netcoreapp3.1/assets/;content/assets/</PackagePath>
+        </None>
+        <None Include="assets\3.png">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		    <Pack>True</Pack>
+		    <PackagePath>contentFiles/any/netcoreapp3.1/assets/;content/assets/</PackagePath>
+        </None>
+        <None Include="assets\4.png">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		    <Pack>True</Pack>
+		    <PackagePath>contentFiles/any/netcoreapp3.1/assets/;content/assets/</PackagePath>
+        </None>
+
+        <None Include="assets\norepo.png">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		    <Pack>True</Pack>
+		    <PackagePath>contentFiles/any/netcoreapp3.1/assets/;content/assets/</PackagePath>
+        </None>
+
+        <None Include="assets\screenshot.png">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		    <Pack>True</Pack>
+		    <PackagePath>contentFiles/any/netcoreapp3.1/assets/;content/assets/</PackagePath>
+        </None>
+
+		<None Include="LICENSE">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<Pack>True</Pack>
+			<PackagePath>contentFiles/any/netcoreapp3.1/;content/</PackagePath>
+			<PackageCopyToOutput>true</PackageCopyToOutput>
+		</None>
+
+		<None Include="README.md">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<Pack>True</Pack>
+			<PackagePath>contentFiles/any/netcoreapp3.1/;content/</PackagePath>
+			<PackageCopyToOutput>true</PackageCopyToOutput>
+		</None>
 	
-  <ItemGroup>
-    <None Include="assets\0.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="assets\1.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="assets\2.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="assets\3.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="assets\4.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-	
-  <ItemGroup>
-    <None Include="assets\norepo.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-	
-  <ItemGroup>
-    <None Include="assets\screenshot.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-	
-  <ItemGroup>
-    <None Include="assets\robotazteque.png" />
   </ItemGroup>
 	
 
   <ItemGroup>
-    <None Update="LICENSE.md">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="README.md">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-	
-
-  <ItemGroup>
-    <PackageReference Include="orbitalshell-kernel" Version="1.0.2" />
+	  <PackageReference Include="orbitalshell-kernel" Version="1.0.2">
+		  <ExcludeAssets>contentfiles</ExcludeAssets>
+	  </PackageReference>
   </ItemGroup>
 
 </Project>
