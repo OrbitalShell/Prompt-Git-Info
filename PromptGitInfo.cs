@@ -220,7 +220,7 @@ namespace OrbitalShell.Module.PromptGitInfo
             CommandEvaluationContext context,
             string repoPath)
         {
-            if (string.IsNullOrWhiteSpace(repoPath)) return new RepoInfo { RepoStatus = RepoStatus.UpToDate };
+            if (string.IsNullOrWhiteSpace(repoPath)) return new RepoInfo { RepoStatus = RepoStatus.Unknown };
 
             var r = new RepoInfo { RepoStatus = RepoStatus.UpToDate };
 
