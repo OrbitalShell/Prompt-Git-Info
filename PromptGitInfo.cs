@@ -135,7 +135,7 @@ namespace OrbitalShell.Module.PromptGitInfo
 
                 var tpl = VarTextTemplateNoRepository;
                 if (repo.Ahead > 0 && repo.Behind > 0) tpl = VarAheadBehindTextTemplate;
-                else if (repo.Behind < 0) tpl = VarAheadTextTemplate;
+                else if (repo.Ahead > 0) tpl = VarAheadTextTemplate;
                 else if (repo.Behind > 0) tpl = VarBehindTextTemplate;
                 else if (repo.IsModified) tpl = VarModifiedTextTemplate;
                 else tpl = VarTextTemplateNoData;
@@ -146,7 +146,7 @@ namespace OrbitalShell.Module.PromptGitInfo
                          tpl
                      );
 
-                var bgColor = "";
+                var bgColor = context.ShellEnv.GetValue<string>(_namespace, VarUnknownBackgroundColor);
                 switch (repo.RepoStatus)
                 {
                     case RepoStatus.AheadBehind:
@@ -171,13 +171,13 @@ namespace OrbitalShell.Module.PromptGitInfo
                 }
                 //bgColor = context.ShellEnv.GetValue<string>(_namespace, VarAheadBackgroundColor);
 
-                var branch = _GetBranch(repoPath);
+                var branch = (repoPath==null)?"": _GetBranch(repoPath);
 
                 var vars = new Dictionary<string, string>
                 {
                     { "bgColor" , bgColor },
                     { "branch" , branch },
-                    { "errorMessage" , repo.ErrorMessage },
+                    { "errorMessage" , string.IsNullOrWhiteSpace(repo.ErrorMessage)?"" : $"(f=red){repo.ErrorMessage}(rdc)" },
                     { "indexAdded" , repo.IndexAdded+"" },
                     { "indexChanges" , repo.IndexChanges+"" },
                     { "indexDeleted" , repo.IndexDeleted+"" },
@@ -221,6 +221,8 @@ namespace OrbitalShell.Module.PromptGitInfo
             CommandEvaluationContext context,
             string repoPath)
         {
+            if (string.IsNullOrWhiteSpace(repoPath)) return new RepoInfo { RepoStatus = RepoStatus.UpToDate };
+
             var r = new RepoInfo { RepoStatus = RepoStatus.UpToDate };
 
             try
@@ -260,6 +262,7 @@ namespace OrbitalShell.Module.PromptGitInfo
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(repoPath)) return null;
                 var lines = File.ReadAllLines(Path.Combine(repoPath, "HEAD"));
                 var txt = lines.Where(x => !string.IsNullOrWhiteSpace(x)).FirstOrDefault();
                 if (txt == null) return "";
@@ -268,7 +271,7 @@ namespace OrbitalShell.Module.PromptGitInfo
             }
             catch (Exception ex)
             {
-                return ex.Message;
+                return $"(f=red){ex.Message}(rdc)";
             }
         }
 
