@@ -133,12 +133,11 @@ namespace OrbitalShell.Module.PromptGitInfo
                 var repo = _GetRepoStatus(context, repoPath);
                 var repoName = Path.GetFileName(Path.GetDirectoryName(repoPath));
 
-                var tpl = VarTextTemplateNoRepository;
+                var tpl = (repo.RepoStatus==RepoStatus.Unknown)?VarTextTemplateNoRepository: VarTextTemplateNoData;
                 if (repo.Ahead > 0 && repo.Behind > 0) tpl = VarAheadBehindTextTemplate;
                 else if (repo.Ahead > 0) tpl = VarAheadTextTemplate;
                 else if (repo.Behind > 0) tpl = VarBehindTextTemplate;
                 else if (repo.IsModified) tpl = VarModifiedTextTemplate;
-                else tpl = VarTextTemplateNoData;
 
                 string text =
                      context.ShellEnv.GetValue<string>(
