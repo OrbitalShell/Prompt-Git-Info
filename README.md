@@ -6,10 +6,15 @@ Add custom text to the prompt of console showing the status of git repositories 
 
 ![.NET](https://github.com/OrbitalShell/Prompt-Git-Info/workflows/.NET/badge.svg)
 ![last commit](https://img.shields.io/github/last-commit/orbitalshell/Prompt-Git-Info?style=plastic)
-![version](https://img.shields.io/github/v/tag/orbitalshell/Prompt-Git-Info?style=plastic) 
+![releasever](https://img.shields.io/github/v/release/orbitalshell/Prompt-Git-Info?style=plastic) 
+![tagver](https://img.shields.io/github/v/tag/orbitalshell/Prompt-Git-Info?style=plastic) 
 <br>
 ![toplanguage](https://img.shields.io/github/languages/top/orbitalshell/Orbital-Shell)
 ![lngcount](https://img.shields.io/github/languages/count/orbitalshell/Orbital-Shell)
+<br>
+![codesize](https://img.shields.io/github/languages/code-size/orbitalshell/Orbital-Shell)
+![reposize](https://img.shields.io/github/repo-size/orbitalshell/Orbital-Shell)
+
 
 ### Usage
 
