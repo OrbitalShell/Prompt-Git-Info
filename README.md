@@ -9,11 +9,11 @@ Add custom text to the prompt of console showing the status of git repositories 
 ![releasever](https://img.shields.io/github/v/release/orbitalshell/Prompt-Git-Info?style=plastic) 
 ![releasedate](https://img.shields.io/github/release-date/orbitalshell/Prompt-Git-Info?style=plastic) 
 <br>
-![toplanguage](https://img.shields.io/github/languages/top/orbitalshell/Orbital-Shell)
-![lngcount](https://img.shields.io/github/languages/count/orbitalshell/Orbital-Shell)
+![toplanguage](https://img.shields.io/github/languages/top/orbitalshell/Prompt-Git-Info)
+![lngcount](https://img.shields.io/github/languages/count/orbitalshell/Prompt-Git-Info)
 <br>
-![codesize](https://img.shields.io/github/languages/code-size/orbitalshell/Orbital-Shell)
-![reposize](https://img.shields.io/github/repo-size/orbitalshell/Orbital-Shell)
+![codesize](https://img.shields.io/github/languages/code-size/orbitalshell/Prompt-Git-Info)
+![reposize](https://img.shields.io/github/repo-size/orbitalshell/Prompt-Git-Info)
 
 
 ### Usage
