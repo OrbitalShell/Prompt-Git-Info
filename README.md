@@ -45,6 +45,10 @@ behind
 
 <img src="assets/4.png"/>
 
+ahead/behind
+
+<img src="assets/5.png"/>
+
 no repo
 
 <img src="assets/norepo.png"/>
@@ -59,6 +63,7 @@ variable | type | value
 -- | -- | --
 aheadBackgroundColor               | string          | \e[48;5;136m
 aheadTextTemplate                  | string          | %bgColor%(f=white) %repoName% ├ %branch% %sepSymbol%%errorMessage%\e[48;5;237m+%indexAdded% ~%indexChanges% -%indexDeleted% \| ~%worktreeChanges% -%worktreeDeleted% ?%untracked% \e[48;5;136m↑%ahead%(rdc)
+aheadBehindTextTemplate            | string          | %bgColor%(f=white) %repoName% {branchSymbol} %branch% %sepSymbol%%errorMessage%{infoColor}+%indexAdded% ~%indexChanges% -%indexDeleted% \| ~%worktreeChanges% -%worktreeDeleted% ?%untracked% {aheadColor}{Unicode.ArrowUp}%ahead%{behindColor}{Unicode.ArrowDown}%behind%(rdc) 
 behindBackgroundColor              | string          | (b=darkred)
 behindTextTemplate                 | string          | %bgColor%(f=white) %repoName% ├ %branch% %sepSymbol%%errorMessage%\e[48;5;237m+%indexAdded% ~%indexChanges% -%indexDeleted% \| ~%worktreeChanges% -%worktreeDeleted% ?%untracked% (b=darkred)↓%behind%(rdc)
 infoBackgroundColor                | string          | \e[48;5;237m

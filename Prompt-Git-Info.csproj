@@ -16,10 +16,10 @@
     <Product>Prompt Git Info (Orbital Shell Module)</Product>
     <Description>Add information about any current or parent GIT repository to orbital shell command line prompt. for example: OrbitalShell ├ master +0 ~0 -0 | ~2 -0 ?2</Description>    
 	  <Copyright>(c) 2020 Licence MIT</Copyright>
-    <Version>1.0.4</Version>
-    <InformationalVersion>1.0.4</InformationalVersion>
+    <Version>1.0.5</Version>
+    <InformationalVersion>1.0.5</InformationalVersion>
     
-	<PackageReleaseNotes>initial stable release, moved to individual repository</PackageReleaseNotes>
+	<PackageReleaseNotes>update documentation</PackageReleaseNotes>
     <ApplicationIcon>assets\robotazteque.ico</ApplicationIcon>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://orbitalshell.github.io/Orbital-Shell/</PackageProjectUrl>
