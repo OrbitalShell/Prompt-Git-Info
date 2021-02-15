@@ -1,7 +1,20 @@
 ﻿# Prompt Git Info
 Module for Orbital Shell
 
-Add custom text to the prompt of console showing the status of git repositories if the current directory is above a repository folder:
+Add custom text to the prompt of console showing the status of git repositories if the current directory is above a repository folder
+
+
+![.NET](https://github.com/OrbitalShell/Prompt-Git-Info/workflows/.NET/badge.svg)
+![last commit](https://img.shields.io/github/last-commit/orbitalshell/Prompt-Git-Info?style=plastic)
+![releasever](https://img.shields.io/github/v/release/orbitalshell/Prompt-Git-Info?style=plastic) 
+![releasedate](https://img.shields.io/github/release-date/orbitalshell/Prompt-Git-Info?style=plastic) 
+<br>
+![toplanguage](https://img.shields.io/github/languages/top/orbitalshell/Orbital-Shell)
+![lngcount](https://img.shields.io/github/languages/count/orbitalshell/Orbital-Shell)
+<br>
+![codesize](https://img.shields.io/github/languages/code-size/orbitalshell/Orbital-Shell)
+![reposize](https://img.shields.io/github/repo-size/orbitalshell/Orbital-Shell)
+
 
 ### Usage
 
