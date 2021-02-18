@@ -34,8 +34,8 @@ namespace OrbitalShell.Module.PromptGitInfo
             Behind = X['↑'];
             Ahead = X['↓'];
             RepoStatus = RepoStatus.UpToDate;
-            if ((IndexChanges > 0 || WorktreeChanges > 0) && Untracked==0) RepoStatus = RepoStatus.Modified;
-            if ((IndexChanges > 0 || WorktreeChanges > 0) && Untracked>0) RepoStatus = RepoStatus.ModifiedUntracked;           
+            if ((IndexChanges > 0 || WorktreeChanges > 0 || WorktreeDeleted>0 || IndexDeleted>0) && Untracked==0) RepoStatus = RepoStatus.Modified;
+            if ((IndexChanges > 0 || WorktreeChanges > 0 || WorktreeDeleted > 0 || IndexDeleted > 0) && Untracked>0) RepoStatus = RepoStatus.ModifiedUntracked;           
             if (Behind > 0) RepoStatus = RepoStatus.Behind;
             if (Ahead > 0) RepoStatus = RepoStatus.Ahead;
             if (Ahead > 0 && Behind > 0) RepoStatus = RepoStatus.AheadBehind;
