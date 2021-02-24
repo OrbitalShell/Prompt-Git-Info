@@ -22,6 +22,11 @@ install into the shell:
 ```shell
 > module -i prompt-git-info
 ```
+disable/enable:
+```shell
+> prompt-info -e false
+> prompt-info -e true
+```
 
 ### Preview
 
