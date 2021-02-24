@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	<!--<TargetFramework>net5.0</TargetFramework>-->
-	<TargetFramework>netcoreapp3.1</TargetFramework>
+	
+	<TargetFramework>net5.0</TargetFramework>
     
 	<RootNamespace>OrbitalShell.Module.PromptGitInfo</RootNamespace>
     <AssemblyName>OrbitalShell.Module.PromptGitInfo</AssemblyName>
@@ -16,10 +16,10 @@
     <Product>Prompt Git Info (Orbital Shell Module)</Product>
     <Description>Add information about any current or parent GIT repository to orbital shell command line prompt. for example: OrbitalShell ├ master +0 ~0 -0 | ~2 -0 ?2</Description>    
 	  <Copyright>(c) Orbital Shell 2020</Copyright>
-    <Version>1.0.11</Version>
-    <InformationalVersion>1.0.11</InformationalVersion>
+    <Version>1.1.0</Version>
+    <InformationalVersion>1.1.0</InformationalVersion>
     
-	<PackageReleaseNotes>fix bad status computuation: take into account index/worktree deleted files</PackageReleaseNotes>
+	<PackageReleaseNotes>add remote instant status (no need git fetch) + behind last commit short message</PackageReleaseNotes>
     <ApplicationIcon>assets\robotazteque.ico</ApplicationIcon>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://orbitalshell.github.io/Orbital-Shell/</PackageProjectUrl>

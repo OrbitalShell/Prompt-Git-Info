@@ -22,7 +22,13 @@ namespace OrbitalShell.Module.PromptGitInfo
     {
         #region attributes 
 
+        public const string GitGetRemoteStatusCmd = "fetch --no-tags --no-auto-gc -q";
         public const string GitGetStatusCmd = "status -s -b -u -M --porcelain";
+        public const string GitGetRemoteBranchStatusCmd = "branch -v -r";
+        public const string GitGetLocalBranchStatusCmd = "branch -v";
+        public const string GitFolder = ".git";
+        public const string GitCmd = "git";
+
         public const string ToolNamespace = "git";
         public const string ToolVarSettingsName = "promptInfo";
         public const string VarIsEnabled = "isEnabled";
@@ -39,7 +45,8 @@ namespace OrbitalShell.Module.PromptGitInfo
         public const string VarAheadTextTemplate = "aheadTextTemplate";
         public const string VarTextTemplateNoData = "noDataTextTemplate";
         public const string VarTextTemplateNoRepository = "templateNoRepository";
-        public const string GitFolder = ".git";
+        public const string VarIsEnabledGetRemoteStatus = "isEnabledGetRemoteStatus";
+
         string _namespace => Variables.Nsp(ShellEnvironmentNamespace.com + "", ToolNamespace, ToolVarSettingsName);
 
         #endregion
@@ -55,7 +62,10 @@ namespace OrbitalShell.Module.PromptGitInfo
             // init settings
             var branchSymbol = Unicode.EdgeRowLeft;
             var sepSymbol = Unicode.RightChevron;
+
             context.ShellEnv.AddNew(_namespace, VarIsEnabled, true, false);
+            context.ShellEnv.AddNew(_namespace, VarIsEnabledGetRemoteStatus, true, false);
+
             var behindColor = "(b=darkred)";
             var aheadColor = ANSI.SGR_SetBackgroundColor8bits(136);
             var infoColor = ANSI.SGR_SetBackgroundColor8bits(237/*59*/);
@@ -70,12 +80,12 @@ namespace OrbitalShell.Module.PromptGitInfo
             context.ShellEnv.AddNew(
                 _namespace,
                 VarBehindTextTemplate,
-                $"%bgColor%(f=white) %repoName% {branchSymbol} %branch% %sepSymbol%%errorMessage%{infoColor}+%indexAdded% ~%indexChanges% -%indexDeleted% | ~%worktreeChanges% -%worktreeDeleted% ?%untracked% {behindColor}{Unicode.ArrowDown}%behind%(rdc) ", false);
+                $"%bgColor%(f=white) %repoName% {branchSymbol} %branch% %sepSymbol%%errorMessage%{infoColor}+%indexAdded% ~%indexChanges% -%indexDeleted% | ~%worktreeChanges% -%worktreeDeleted% ?%untracked% {behindColor}{Unicode.ArrowDown}%behind%%behindMessage%(rdc) ", false);
             
             context.ShellEnv.AddNew(
                 _namespace,
                 VarAheadBehindTextTemplate,
-                $"%bgColor%(f=white) %repoName% {branchSymbol} %branch% %sepSymbol%%errorMessage%{infoColor}+%indexAdded% ~%indexChanges% -%indexDeleted% | ~%worktreeChanges% -%worktreeDeleted% ?%untracked% {aheadColor}{Unicode.ArrowUp}%ahead%{behindColor}{Unicode.ArrowDown}%behind%(rdc) ", false);
+                $"%bgColor%(f=white) %repoName% {branchSymbol} %branch% %sepSymbol%%errorMessage%{infoColor}+%indexAdded% ~%indexChanges% -%indexDeleted% | ~%worktreeChanges% -%worktreeDeleted% ?%untracked% {aheadColor}{Unicode.ArrowUp}%ahead%{behindColor}{Unicode.ArrowDown}%behind%%behindMessage%(rdc) ", false);
 
             context.ShellEnv.AddNew(
                 _namespace,
@@ -129,8 +139,9 @@ namespace OrbitalShell.Module.PromptGitInfo
         {
             if (context.ShellEnv.IsOptionSetted(_namespace, VarIsEnabled))
             {
-                var repoPath = _RepoPathExists(Environment.CurrentDirectory);
-                var repo = _GetRepoStatus(context, repoPath);
+                var repoPath = DoesRepoPathExists(Environment.CurrentDirectory);
+                var branch = (repoPath == null) ? "" : GetBranch(repoPath);
+                var repo = GetRepoStatus(context, repoPath, branch,out var behindMessage);
                 var repoName = Path.GetFileName(Path.GetDirectoryName(repoPath));
 
                 var tpl = (repo.RepoStatus==RepoStatus.Unknown)?VarTextTemplateNoRepository: VarTextTemplateNoData;
@@ -167,10 +178,7 @@ namespace OrbitalShell.Module.PromptGitInfo
                     case RepoStatus.Unknown:
                         bgColor = context.ShellEnv.GetValue<string>(_namespace, VarUnknownBackgroundColor);
                         break;
-                }
-                //bgColor = context.ShellEnv.GetValue<string>(_namespace, VarAheadBackgroundColor);
-
-                var branch = (repoPath==null)?"": _GetBranch(repoPath);
+                }            
 
                 var vars = new Dictionary<string, string>
                 {
@@ -187,9 +195,10 @@ namespace OrbitalShell.Module.PromptGitInfo
                     { "repoName" , repoName },
                     { "behind" , repo.Behind+"" },
                     { "ahead" , repo.Ahead+"" },
-                    { "sepSymbol" , "" }
+                    { "sepSymbol" , "" },
+                    { "behindMessage" , behindMessage==null?"":$" ({behindMessage})" }
                 };
-                text = _SetVars(context, text, vars);
+                text = SetVars(context, text, vars);
 
                 context.Out.Echo(text, false);
             }
@@ -199,7 +208,7 @@ namespace OrbitalShell.Module.PromptGitInfo
 
         #region utils
 
-        string _RepoPathExists(string path)
+        static string DoesRepoPathExists(string path)
         {
             while (true)
             {
@@ -216,13 +225,56 @@ namespace OrbitalShell.Module.PromptGitInfo
             return null;
         }
 
-        RepoInfo _GetRepoStatus(
+        RepoInfo GetRepoStatus(
             CommandEvaluationContext context,
-            string repoPath)
+            string repoPath,
+            string branch,
+            out string behindMessage
+            )
         {
+            behindMessage = null;
             if (string.IsNullOrWhiteSpace(repoPath)) return new RepoInfo { RepoStatus = RepoStatus.Unknown };
 
             var r = new RepoInfo { RepoStatus = RepoStatus.UpToDate };
+
+            if (context.ShellEnv.IsOptionSetted(_namespace, VarIsEnabledGetRemoteStatus))
+                try
+                {
+                    // fetch remote status
+                    context.CommandLineProcessor.ShellExec(context, GitCmd, GitGetRemoteStatusCmd, out var r0, true, false);
+                    if (r0 != null)
+                    {
+                        // local branches list
+                        context.CommandLineProcessor.ShellExec(context, GitCmd, GitGetLocalBranchStatusCmd, out var r1, true, false);
+                        if (r1 != null)
+                        {
+                            var lines = r1.Split(Environment.NewLine);
+                            if (lines.Any())
+                            {
+                                var localBranchLine = lines.Where(x => x.StartsWith("*")).FirstOrDefault();
+                                if (localBranchLine != null && localBranchLine.Contains("[behind"))
+                                {
+                                    // get remote branch info
+                                    context.CommandLineProcessor.ShellExec(context, GitCmd, GitGetRemoteBranchStatusCmd, out var r2, true, false);
+                                    if (r2 != null)
+                                    {
+                                        var lines2 = r2.Split(Environment.NewLine);
+                                        if (lines2.Any())
+                                        {
+                                            var remoteBranchLine = lines2.Where(x => x.Contains($"/{branch} ")).FirstOrDefault();
+                                            if (remoteBranchLine != null)
+                                            {
+                                                var lc = lines2.Select(x => x.Trim().Split()[0].Length).Max();
+                                                behindMessage = remoteBranchLine[(lc + 2)..];
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                catch { };
 
             try
             {
@@ -250,14 +302,14 @@ namespace OrbitalShell.Module.PromptGitInfo
             return r;
         }
 
-        string _SetVars(CommandEvaluationContext context, string text, Dictionary<string, string> vars)
+        static string SetVars(CommandEvaluationContext context, string text, Dictionary<string, string> vars)
         {
             foreach (var kv in vars)
                 text = text.Replace($"%{kv.Key}%", kv.Value);
             return text;
         }
 
-        string _GetBranch(string repoPath)
+        static string GetBranch(string repoPath)
         {
             try
             {

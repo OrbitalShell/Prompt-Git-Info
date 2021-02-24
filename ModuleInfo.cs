@@ -6,7 +6,7 @@ using OrbitalShell.Lib;
 /// </summary>
 [assembly: ShellModule("OrbitalShell-Module-PromptGitInfo")]
 [assembly: ModuleTargetPlateform(TargetPlatform.Any)]
-[assembly: ModuleShellMinVersion("1.0.6")]
+[assembly: ModuleShellMinVersion("1.0.7")]
 [assembly: ModuleAuthors("Orbital Shell team")]
 namespace OrbitalShell.Module.PromptGitInfo
 {
