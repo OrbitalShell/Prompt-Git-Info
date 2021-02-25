@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using OrbitalShell.Component.Console;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace OrbitalShell.Module.PromptGitInfo
 {
@@ -46,8 +47,11 @@ namespace OrbitalShell.Module.PromptGitInfo
         public const string VarTextTemplateNoData = "noDataTextTemplate";
         public const string VarTextTemplateNoRepository = "templateNoRepository";
         public const string VarIsEnabledGetRemoteStatus = "isEnabledGetRemoteStatus";
+        public const string VarRunInBackgroundTask = "runInBackgroundTask";
 
         string _namespace => Variables.Nsp(ShellEnvironmentNamespace.com + "", ToolNamespace, ToolVarSettingsName);
+
+        string Text;
 
         #endregion
 
@@ -65,6 +69,7 @@ namespace OrbitalShell.Module.PromptGitInfo
 
             context.ShellEnv.AddNew(_namespace, VarIsEnabled, true, false);
             context.ShellEnv.AddNew(_namespace, VarIsEnabledGetRemoteStatus, true, false);
+            context.ShellEnv.AddNew(_namespace, VarRunInBackgroundTask, true, false);
 
             var behindColor = "(b=darkred)";
             var aheadColor = ANSI.SGR_SetBackgroundColor8bits(136);
@@ -137,6 +142,18 @@ namespace OrbitalShell.Module.PromptGitInfo
         [Hook(Hooks.PromptOutputBegin)]
         public void PromptOutputBegin(CommandEvaluationContext context)
         {
+            void a() => PromptOutputBeginBody(context);
+            if (context.ShellEnv.IsOptionSetted(_namespace, VarRunInBackgroundTask))
+            {
+                Task.Run(a);
+                if (Text!=null) context.Out.Echo(Text, false);
+            }
+            else
+                a();
+        }
+
+        public void PromptOutputBeginBody(CommandEvaluationContext context)
+        { 
             if (context.ShellEnv.IsOptionSetted(_namespace, VarIsEnabled))
             {
                 var repoPath = DoesRepoPathExists(Environment.CurrentDirectory);
@@ -198,9 +215,9 @@ namespace OrbitalShell.Module.PromptGitInfo
                     { "sepSymbol" , "" },
                     { "behindMessage" , behindMessage==null?"":$" ({behindMessage})" }
                 };
-                text = SetVars(context, text, vars);
-
-                context.Out.Echo(text, false);
+                Text = SetVars(context, text, vars);
+                
+                //context.Out.Echo(text, false);
             }
         }
 
@@ -252,7 +269,11 @@ namespace OrbitalShell.Module.PromptGitInfo
                             if (lines.Any())
                             {
                                 var localBranchLine = lines.Where(x => x.StartsWith("*")).FirstOrDefault();
-                                if (localBranchLine != null && localBranchLine.Contains("[behind"))
+                                if (localBranchLine != null && 
+                                    (
+                                        localBranchLine.Contains("[behind")
+                                        || localBranchLine.Contains(", behind")
+                                    ))
                                 {
                                     // get remote branch info
                                     context.CommandLineProcessor.ShellExec(context, GitCmd, GitGetRemoteBranchStatusCmd, out var r2, true, false);
@@ -264,8 +285,8 @@ namespace OrbitalShell.Module.PromptGitInfo
                                             var remoteBranchLine = lines2.Where(x => x.Contains($"/{branch} ")).FirstOrDefault();
                                             if (remoteBranchLine != null)
                                             {
-                                                var lc = lines2.Select(x => x.Trim().Split()[0].Length).Max();
-                                                behindMessage = remoteBranchLine[(lc + 2)..];
+                                                var lc = lines2.Select(x => x.Trim().Split(" ")[0].Length).Max();
+                                                behindMessage = remoteBranchLine[(lc +2 +7 +2)..];
                                             }
                                         }
                                     }
