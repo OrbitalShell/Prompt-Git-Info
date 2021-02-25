@@ -91,6 +91,16 @@ modifiedBackgroundColor            | string              | \e[48;5;130m
 modifiedUntrackedBackgroundColor   | string              | \e[48;5;166m
 unknownBackgroundColor             | string              | (b=darkblue)
 
+<br>
+
+### Settings example
+
+change behin background color, for example within user **.profile** script :
+
+```shell
+set env.com.git.promptInfo.behindBackgroundColor (b=magenta)
+```
+
 <br><br><br>
 
 <hr>
