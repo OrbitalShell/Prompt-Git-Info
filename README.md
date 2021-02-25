@@ -65,8 +65,6 @@ ahead/behind + behind message
 no repo
 
 <img src="assets/norepo.png"/>
-<br>
-<br>
 
 ### Settings
 
@@ -100,6 +98,28 @@ change behin background color, for example within user **.profile** script :
 ```shell
 set env.com.git.promptInfo.behindBackgroundColor (b=magenta)
 ```
+
+## Templates paramters
+
+  - infoColor
+  - behindColor
+  - aheadColor
+  - unknownBackgroundColor
+  - bgColor
+  - branch
+  - errorMessage
+  - indexAdded
+  - indexChanges
+  - indexDeleted
+  - worktreeChanges
+  - worktreeAdded
+  - worktreeDeleted
+  - untracked
+  - repoName
+  - behind
+  - ahead
+  - sepSymbol
+  - behindMessage
 
 <br><br><br>
 
