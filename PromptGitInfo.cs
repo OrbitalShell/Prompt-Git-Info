@@ -69,7 +69,7 @@ namespace OrbitalShell.Module.PromptGitInfo
 
             context.ShellEnv.AddNew(_namespace, VarIsEnabled, true, false);
             context.ShellEnv.AddNew(_namespace, VarIsEnabledGetRemoteStatus, true, false);
-            context.ShellEnv.AddNew(_namespace, VarRunInBackgroundTask, true, false);
+            context.ShellEnv.AddNew(_namespace, VarRunInBackgroundTask, false, false);
 
             var behindColor = "(b=darkred)";
             var aheadColor = ANSI.SGR_SetBackgroundColor8bits(136);
@@ -144,12 +144,10 @@ namespace OrbitalShell.Module.PromptGitInfo
         {
             void a() => PromptOutputBeginBody(context);
             if (context.ShellEnv.IsOptionSetted(_namespace, VarRunInBackgroundTask))
-            {
                 Task.Run(a);
-                if (Text!=null) context.Out.Echo(Text, false);
-            }
             else
                 a();
+            if (Text != null) context.Out.Echo(Text, false);
         }
 
         public void PromptOutputBeginBody(CommandEvaluationContext context)
@@ -215,9 +213,7 @@ namespace OrbitalShell.Module.PromptGitInfo
                     { "sepSymbol" , "" },
                     { "behindMessage" , behindMessage==null?"":$" ({behindMessage})" }
                 };
-                Text = SetVars(context, text, vars);
-                
-                //context.Out.Echo(text, false);
+                Text = SetVars(context, text, vars);                                
             }
         }
 
