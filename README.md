@@ -50,9 +50,17 @@ behind
 
 <img src="assets/4.png"/>
 
+behind + behind message
+
+<img src="assets/6.png"/>
+
 ahead/behind
 
 <img src="assets/5.png"/>
+
+ahead/behind + behind message
+
+<img src="assets/7.png"/>
 
 no repo
 
