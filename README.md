@@ -74,20 +74,22 @@ namespace **env.com.git.promptInfo**
 
 variable | type | value
 -- | -- | --
-aheadBackgroundColor               | string          | \e[48;5;136m
-aheadTextTemplate                  | string          | %bgColor%(f=white) %repoName% ├ %branch% %sepSymbol%%errorMessage%\e[48;5;237m+%indexAdded% ~%indexChanges% -%indexDeleted% \| ~%worktreeChanges% -%worktreeDeleted% ?%untracked% \e[48;5;136m↑%ahead%(rdc)
-aheadBehindTextTemplate            | string          | %bgColor%(f=white) %repoName% {branchSymbol} %branch% %sepSymbol%%errorMessage%{infoColor}+%indexAdded% ~%indexChanges% -%indexDeleted% \| ~%worktreeChanges% -%worktreeDeleted% ?%untracked% {aheadColor}{Unicode.ArrowUp}%ahead%{behindColor}{Unicode.ArrowDown}%behind%(rdc) 
-behindBackgroundColor              | string          | (b=darkred)
-behindTextTemplate                 | string          | %bgColor%(f=white) %repoName% ├ %branch% %sepSymbol%%errorMessage%\e[48;5;237m+%indexAdded% ~%indexChanges% -%indexDeleted% \| ~%worktreeChanges% -%worktreeDeleted% ?%untracked% (b=darkred)↓%behind%(rdc)
-infoBackgroundColor                | string          | \e[48;5;237m
-isEnabled                          | bool            | true
-modifiedBackgroundColor            | string          | \e[48;5;130m
-modifiedTextTemplate               | string          | %bgColor%(f=white) %repoName% ├ %branch% %sepSymbol%%errorMessage%\e[48;5;237m+%indexAdded% ~%indexChanges% -%indexDeleted% \| ~%worktreeChanges% -%worktreeDeleted% ?%untracked%(rdc)
-modifiedUntrackedBackgroundColor   | string          | \e[48;5;166m
-noDataTextTemplate                 | string          | %bgColor%(f=white) %repoName% ├ %branch% %errorMessage%(rdc)
-templateNoRepository               | string          | (b=darkblue)(f=white) » %errorMessage%(rdc)
-unknownBackgroundColor             | string          | (b=darkblue)
-upToDateBackgroundColor            | string          | \e[48;5;22m
+isEnabled                          | bool                | true
+isEnabledGetRemoteStatus           | bool                | true
+runInBackgroundTask                | bool                | fals|e
+infoBackgroundColor                | string              | \e[48;5;237|m
+modifiedTextTemplate               | string              | %bgColor%(f=w|hite) %repoName% ├ %branch% %sepSymbol%%errorMessage%\e[48;5;237m+%indexAdded% ~%indexChanges% -%indexDeleted% \| ~%worktreeChanges% -%worktreeDeleted% ?%untracked%(rdc|)
+behindTextTemplate                 | string              | %bgColor%(f=white) %repoName% ├ %branch% %sepSymbol%%errorMessage%\e[48;5;237m+%indexAdded% ~%indexChanges% -%indexDeleted% \| ~%worktreeChanges% -%worktreeDeleted% ?%untracked% (b=darkred)↓%behind%%behindMessage%(rdc)
+aheadBehindTextTemplate            | string              | %bgColor%(f=white) %repoName% ├ %branch% %sepSymbol%%errorMessage%\e[48;5;237m+%indexAdded% ~%indexChanges% -%indexDeleted% \| ~%worktreeChanges% -%worktreeDeleted% ?%untracked% \e[48;5;136m↑%ahead%(b=darkred)↓%behind%%behindMessage%(rdc)
+aheadTextTemplate                  | string              | %bgColor%(f=white) %repoName% ├ %branch% %sepSymbol%%errorMessage%\e[48;5;237m+%indexAdded% ~%indexChanges% -%indexDeleted% \| ~%worktreeChanges% -%worktreeDeleted% ?%untracked% \e[48;5;136m↑%ahead%(rdc)
+noDataTextTemplate                 | string              | %bgColor%(f=white) %repoName% ├ %branch% %errorMessage%(rdc)
+templateNoRepository               | string              | (b=darkblue)(f=white) » %errorMessage%(rdc)
+behindBackgroundColor              | string              | (b=darkred)
+aheadBackgroundColor               | string              | \e[48;5;136m
+upToDateBackgroundColor            | string              | \e[48;5;22m
+modifiedBackgroundColor            | string              | \e[48;5;130m
+modifiedUntrackedBackgroundColor   | string              | \e[48;5;166m
+unknownBackgroundColor             | string              | (b=darkblue)
 
 <br><br><br>
 
