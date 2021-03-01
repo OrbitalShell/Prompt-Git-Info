@@ -16,8 +16,8 @@
     <Product>Prompt Git Info (Orbital Shell Module)</Product>
     <Description>Add information about any current or parent GIT repository to orbital shell command line prompt. for example: OrbitalShell ├ master +0 ~0 -0 | ~2 -0 ?2</Description>    
 	  <Copyright>(c) Orbital Shell 2020</Copyright>
-    <Version>1.1.0</Version>
-    <InformationalVersion>1.1.0</InformationalVersion>
+    <Version>1.2.0</Version>
+    <InformationalVersion>1.2.0</InformationalVersion>
     
 	<PackageReleaseNotes>add remote instant status (no need git fetch) + behind last commit short message</PackageReleaseNotes>
     <ApplicationIcon>assets\robotazteque.ico</ApplicationIcon>
@@ -102,7 +102,7 @@
 	
 
   <ItemGroup>
-	  <PackageReference Include="orbitalshell-kernel" Version="1.0.6">
+	  <PackageReference Include="orbitalshell-kernel" Version="1.0.9">
 		  <ExcludeAssets>contentfiles</ExcludeAssets>
 	  </PackageReference>
   </ItemGroup>

@@ -42,7 +42,7 @@ namespace OrbitalShell.Module.PromptGitInfo
         public const string VarUnknownBackgroundColor = "unknownBackgroundColor";
         public const string VarModifiedTextTemplate = "modifiedTextTemplate";
         public const string VarBehindTextTemplate = "behindTextTemplate";
-        public const string VarAheadBehindTextTemplate = "aheadBbehindTextTemplate";
+        public const string VarAheadBehindTextTemplate = "aheadBehindTextTemplate";
         public const string VarAheadTextTemplate = "aheadTextTemplate";
         public const string VarTextTemplateNoData = "noDataTextTemplate";
         public const string VarTextTemplateNoRepository = "templateNoRepository";
@@ -65,7 +65,7 @@ namespace OrbitalShell.Module.PromptGitInfo
         {
             // init settings
             var branchSymbol = Unicode.EdgeRowLeft;
-            var sepSymbol = Unicode.RightChevron;
+            //var sepSymbol = Unicode.RightChevron;
 
             context.ShellEnv.AddNew(_namespace, VarIsEnabled, true, false);
             context.ShellEnv.AddNew(_namespace, VarIsEnabledGetRemoteStatus, true, false);
@@ -74,28 +74,27 @@ namespace OrbitalShell.Module.PromptGitInfo
             var behindColor = "(b=darkred)";
             var aheadColor = ANSI.SGR_SetBackgroundColor8bits(136);
             var infoColor = ANSI.SGR_SetBackgroundColor8bits(237/*59*/);
-
             context.ShellEnv.AddNew(_namespace, VarInfoBackgroundColor, infoColor);
 
             context.ShellEnv.AddNew(
                 _namespace,
                 VarModifiedTextTemplate,
-                $"%bgColor%(f=white) %repoName% {branchSymbol} %branch% %sepSymbol%%errorMessage%{infoColor}+%indexAdded% ~%indexChanges% -%indexDeleted% | ~%worktreeChanges% -%worktreeDeleted% ?%untracked%(rdc) ", false);
+                $"%bgColor%(f=white) %repoName% {branchSymbol} %branch% %sepSymbol%%errorMessage%%infoColor%+%indexAdded% ~%indexChanges% -%indexDeleted% | ~%worktreeChanges% -%worktreeDeleted% ?%untracked%(rdc) ", false);
 
             context.ShellEnv.AddNew(
                 _namespace,
                 VarBehindTextTemplate,
-                $"%bgColor%(f=white) %repoName% {branchSymbol} %branch% %sepSymbol%%errorMessage%{infoColor}+%indexAdded% ~%indexChanges% -%indexDeleted% | ~%worktreeChanges% -%worktreeDeleted% ?%untracked% {behindColor}{Unicode.ArrowDown}%behind%%behindMessage%(rdc) ", false);
+                $"%bgColor%(f=white) %repoName% {branchSymbol} %branch% %sepSymbol%%errorMessage%%infoColor%+%indexAdded% ~%indexChanges% -%indexDeleted% | ~%worktreeChanges% -%worktreeDeleted% ?%untracked% %behindColor%{Unicode.ArrowDown}%behind%%behindMessage%(rdc) ", false);
             
             context.ShellEnv.AddNew(
                 _namespace,
                 VarAheadBehindTextTemplate,
-                $"%bgColor%(f=white) %repoName% {branchSymbol} %branch% %sepSymbol%%errorMessage%{infoColor}+%indexAdded% ~%indexChanges% -%indexDeleted% | ~%worktreeChanges% -%worktreeDeleted% ?%untracked% {aheadColor}{Unicode.ArrowUp}%ahead%{behindColor}{Unicode.ArrowDown}%behind%%behindMessage%(rdc) ", false);
+                $"%bgColor%(f=white) %repoName% {branchSymbol} %branch% %sepSymbol%%errorMessage%%infoColor%+%indexAdded% ~%indexChanges% -%indexDeleted% | ~%worktreeChanges% -%worktreeDeleted% ?%untracked% %aheadColor%{Unicode.ArrowUp}%ahead%%behindColor%{Unicode.ArrowDown}%behind%%behindMessage%(rdc) ", false);
 
             context.ShellEnv.AddNew(
                 _namespace,
                 VarAheadTextTemplate,
-                $"%bgColor%(f=white) %repoName% {branchSymbol} %branch% %sepSymbol%%errorMessage%{infoColor}+%indexAdded% ~%indexChanges% -%indexDeleted% | ~%worktreeChanges% -%worktreeDeleted% ?%untracked% {aheadColor}{Unicode.ArrowUp}%ahead%(rdc) ", false);
+                $"%bgColor%(f=white) %repoName% {branchSymbol} %branch% %sepSymbol%%errorMessage%%infoColor%+%indexAdded% ~%indexChanges% -%indexDeleted% | ~%worktreeChanges% -%worktreeDeleted% ?%untracked% %aheadColor%{Unicode.ArrowUp}%ahead%(rdc) ", false);
 
             context.ShellEnv.AddNew(
                 _namespace,
@@ -105,7 +104,7 @@ namespace OrbitalShell.Module.PromptGitInfo
             context.ShellEnv.AddNew(
                 _namespace,
                 VarTextTemplateNoRepository,
-                $"(b=darkblue)(f=white) {sepSymbol} %errorMessage%(rdc) ", false);
+                $"%unknownBackgroundColor%(f=white) {branchSymbol} %errorMessage%(rdc) ", false);
             
             context.ShellEnv.AddNew(_namespace, VarBehindBackgroundColor, behindColor, false);
             context.ShellEnv.AddNew(_namespace, VarAheadBackgroundColor, aheadColor, false);
@@ -197,6 +196,11 @@ namespace OrbitalShell.Module.PromptGitInfo
 
                 var vars = new Dictionary<string, string>
                 {
+                    { "infoColor" , context.ShellEnv.GetValue<string>(_namespace,VarInfoBackgroundColor) },
+                    { "behindColor" , context.ShellEnv.GetValue<string>(_namespace,VarBehindBackgroundColor) },
+                    { "aheadColor" , context.ShellEnv.GetValue<string>(_namespace,VarAheadBackgroundColor) },
+                    { "unknownBackgroundColor" , context.ShellEnv.GetValue<String>(_namespace,VarUnknownBackgroundColor) },
+
                     { "bgColor" , bgColor },
                     { "branch" , branch },
                     { "errorMessage" , string.IsNullOrWhiteSpace(repo.ErrorMessage)?"" : $"(f=red){repo.ErrorMessage}(rdc)" },
