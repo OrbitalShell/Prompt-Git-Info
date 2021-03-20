@@ -74,9 +74,9 @@ variable | type | value
 -- | -- | --
 isEnabled                          | bool                | true
 isEnabledGetRemoteStatus           | bool                | true
-runInBackgroundTask                | bool                | fals|e
+runInBackgroundTask                | bool                | false
 infoBackgroundColor                | string              | \e[48;5;237|m
-modifiedTextTemplate               | string              | %bgColor%(f=w|hite) %repoName% ├ %branch% %sepSymbol%%errorMessage%\e[48;5;237m+%indexAdded% ~%indexChanges% -%indexDeleted% \| ~%worktreeChanges% -%worktreeDeleted% ?%untracked%(rdc|)
+modifiedTextTemplate               | string              | %bgColor%(f=white) %repoName% ├ %branch% %sepSymbol%%errorMessage%\e[48;5;237m+%indexAdded% ~%indexChanges% -%indexDeleted% \| ~%worktreeChanges% -%worktreeDeleted% ?%untracked%(rdc|)
 behindTextTemplate                 | string              | %bgColor%(f=white) %repoName% ├ %branch% %sepSymbol%%errorMessage%\e[48;5;237m+%indexAdded% ~%indexChanges% -%indexDeleted% \| ~%worktreeChanges% -%worktreeDeleted% ?%untracked% (b=darkred)↓%behind%%behindMessage%(rdc)
 aheadBehindTextTemplate            | string              | %bgColor%(f=white) %repoName% ├ %branch% %sepSymbol%%errorMessage%\e[48;5;237m+%indexAdded% ~%indexChanges% -%indexDeleted% \| ~%worktreeChanges% -%worktreeDeleted% ?%untracked% \e[48;5;136m↑%ahead%(b=darkred)↓%behind%%behindMessage%(rdc)
 aheadTextTemplate                  | string              | %bgColor%(f=white) %repoName% ├ %branch% %sepSymbol%%errorMessage%\e[48;5;237m+%indexAdded% ~%indexChanges% -%indexDeleted% \| ~%worktreeChanges% -%worktreeDeleted% ?%untracked% \e[48;5;136m↑%ahead%(rdc)
